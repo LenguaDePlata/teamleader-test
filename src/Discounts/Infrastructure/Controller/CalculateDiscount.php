@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class CalculateDiscount extends AbstractController
 {
@@ -42,7 +43,44 @@ final class CalculateDiscount extends AbstractController
 	private function constraints(): array
 	{
 		return [
-			// add the validation rules
+			'id' => new Assert\Required([
+				new Assert\NotBlank(),
+				new Assert\Type('numeric'),
+				new Assert\Positive()
+			]),
+			'customer-id' => new Assert\Required([
+				new Assert\NotBlank(),
+				new Assert\Type('numeric'),
+				new Assert\Positive()
+			]),
+			'items' => new Assert\Required([
+				new Assert\NotBlank(),
+				new Assert\Type('array')
+			]),
+			'items.*.product-id' => new Assert\Required([
+				new Assert\NotBlank(),
+				new Assert\Type('string')
+			]),
+			'items.*.quantity' => new Assert\Required([
+				new Assert\NotBlank(),
+				new Assert\Type('numeric'),
+				new Assert\Positive()
+			]),
+			'items.*.unit-price' => new Assert\Required([
+				new Assert\NotBlank(),
+				new Assert\Type('numeric'),
+				new Assert\PositiveOrZero()
+			]),
+			'items.*.total' => new Assert\Required([
+				new Assert\NotBlank(),
+				new Assert\Type('numeric'),
+				new Assert\PositiveOrZero()
+			]),
+			'total' => new Assert\Required([
+				new Assert\NotBlank(),
+				new Assert\Type('numeric'),
+				new Assert\PositiveOrZero()
+			])
 		];
 	}
 }
