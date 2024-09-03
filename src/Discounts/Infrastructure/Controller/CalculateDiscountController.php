@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Discounts\Infrastructure\Controller;
 
+use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountHandler;
+use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountQuery;
 use App\Shared\Infrastructure\Validator\RequestValidator;
 use Exception;
 use InvalidArgumentException;
@@ -12,16 +14,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class CalculateDiscount extends AbstractController
+final class CalculateDiscountController extends AbstractController
 {
 	use RequestValidator;
+
+	public function __construct(
+		private CalculateDiscountHandler $calculateDiscountHandler
+	) {}
 
 	public function __invoke(Request $request): JsonResponse
 	{
 		try {
 			$decodedRequest = json_decode($request->getContent(), true);
 			$this->ensureRequestIsValid($decodedRequest, $this->constraints());
-			// TODO: call the use case
+			$result = $this->calculateDiscountHandler->handle(new CalculateDiscountQuery($decodedRequest));
+			return $this->json(
+				$result->toArray(),
+				JsonResponse::HTTP_OK
+			); 
 		} catch(InvalidJsonException $e) {
 			return $this->json(
 				$e->getMessage(),

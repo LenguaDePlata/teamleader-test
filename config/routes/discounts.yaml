@@ -1,4 +1,4 @@
 discount_calculate:
     path: /api/discounts/calculate
-    controller: App\Discounts\Infrastructure\Controller\CalculateDiscount::__invoke
+    controller: App\Discounts\Infrastructure\Controller\CalculateDiscountController::__invoke
     methods: GET
