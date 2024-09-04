@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Discounts\Application\Query\CalculateDiscount;
 
 use App\Shared\Application\Query\ResponseDTO;
+use App\Discounts\Application\DTO\OrderLineResponse;
 
 final class CalculateDiscountResponse implements ResponseDTO
 {
 	public function __construct(
 		private int $id,
 		private int $customerId,
-		/** @var ProductResponse[] $originalProducts */
+		/** @var OrderLineResponse[] $originalProducts */
 		private array $originalProducts,
 		private float $originalTotal,
 		/** @var DiscountedProductResponse[] $originalProducts */
@@ -26,7 +27,7 @@ final class CalculateDiscountResponse implements ResponseDTO
 			'customer-id' => $this->customerId,
 			'original-order' => [
 				'items' => array_map(
-					function(ProductResponse $product) {
+					function(OrderLineResponse $product) {
 						return $product->toArray();
 					},
 					$this->originalProducts
