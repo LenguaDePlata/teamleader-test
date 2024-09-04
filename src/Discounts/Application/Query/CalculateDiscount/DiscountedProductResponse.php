@@ -8,11 +8,22 @@ use App\Shared\Application\Query\ResponseDTO;
 
 final class DiscountedProductResponse implements ResponseDTO
 {
-	//TODO constructor
+	public function __construct(
+		private string $productId,
+		private int $quantity,
+		private float $unitPrice,
+		private float $total,
+		private array $discountsAppliedToProduct
+	){}
 
 	public function toArray(): array
 	{
-		//TODO transformer
-		return [];
+		return [
+			'product-id' => $this->productId,
+			'quantity' => $this->quantity,
+			'unit-price' => $this->unitPrice,
+			'total' => $this->total,
+			'discounts-applied-to-product' => $this->discountsAppliedToProduct
+		];
 	}
 }

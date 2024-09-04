@@ -8,11 +8,16 @@ use App\Shared\Application\Query\ResponseDTO;
 
 final class DiscountedTotalResponse implements ResponseDTO
 {
-	// TODO constructor
+	public function __construct(
+		private float $total,
+		private array $discountsAppliedToTotal
+	){}
 
 	public function toArray(): array
 	{
-		//TODO transformer
-		return [];
+		return [
+			'total' => $this->total,
+			'discounts-applied-to-total' => $this->discountsAppliedToTotal
+		];
 	}
 }
