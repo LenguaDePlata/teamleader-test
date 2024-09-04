@@ -9,8 +9,8 @@ final class CalculateDiscountQuery
 	public function __construct(
 		private int $id,
 		private int $customerId,
-		/** @var ProductDTO[] $products */
-		private array $products,
+		/** @var OrderItemDTO[] $orderItems */
+		private array $orderItems,
 		private float $total
 	){}
 
@@ -25,11 +25,11 @@ final class CalculateDiscountQuery
 	}
 
 	/**
-		@return ProductDTO[]
+		@return OrderItemDTO[]
 	*/
-	public function getProducts(): array
+	public function getOrderItems(): array
 	{
-		return $this->products;
+		return $this->orderItems;
 	}
 
 	public function getTotal(): float

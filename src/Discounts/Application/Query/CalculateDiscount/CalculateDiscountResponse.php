@@ -5,41 +5,41 @@ declare(strict_types=1);
 namespace App\Discounts\Application\Query\CalculateDiscount;
 
 use App\Shared\Application\Query\ResponseDTO;
-use App\Discounts\Application\DTO\OrderLineResponse;
+use App\Discounts\Application\DTO\OrderItemResponse;
 
 final class CalculateDiscountResponse implements ResponseDTO
 {
 	public function __construct(
 		private int $id,
 		private int $customerId,
-		/** @var OrderLineResponse[] $originalProducts */
-		private array $originalProducts,
+		/** @var OrderItemResponse[] $originalOrderItems */
+		private array $originalOrderItems,
 		private float $originalTotal,
-		/** @var DiscountedProductResponse[] $originalProducts */
-		private array $discountedProducts,
+		/** @var DiscountedOrderItemResponse[] $discountedOrderItems */
+		private array $discountedOrderItems,
 		private DiscountedTotalResponse $discountedTotal
 	){}
 
-	public function toArray(): array
+	public function __toArray(): array
 	{
 		return [
 			'id' => $this->id,
 			'customer-id' => $this->customerId,
 			'original-order' => [
 				'items' => array_map(
-					function(OrderLineResponse $product) {
-						return $product->toArray();
+					function(OrderItemResponse $orderItem) {
+						return $orderItem->__toArray();
 					},
-					$this->originalProducts
+					$this->originalOrderItems
 				),
 				'total' => $this->originalTotal
 			],
 			'discounted-order' => [
 				'items' => array_map(
-					function(DiscountedProductResponse $product) {
-						return $product->toArray();
+					function(DiscountedOrderItemResponse $orderItem) {
+						return $orderItem->__toArray();
 					},
-					$this->discountedProducts
+					$this->discountedOrderItems
 				),
 				'total' => $this->discountedTotal->toArray()
 			]

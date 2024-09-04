@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Discounts\Infrastructure\Controller;
 
-use App\Discounts\Application\DTO\ProductDTO;
+use App\Discounts\Application\DTO\OrderItemDTO;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountHandler;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountQuery;
 use App\Shared\Infrastructure\Validator\RequestValidator;
@@ -28,16 +28,16 @@ final class CalculateDiscountController extends AbstractController
 		try {
 			$decodedRequest = json_decode($request->getContent(), true);
 			$this->ensureRequestIsValid($decodedRequest, $this->constraints());
-			$result = $this->calculateDiscountHandler->handle(new CalculateDiscountQuery(
+			$response = $this->calculateDiscountHandler->handle(new CalculateDiscountQuery(
 				$decodedRequest['id'],
 				$decodedRequest['customer-id'],
 				array_map(
-					function(array $product) {
-						return new ProductDTO(
-							$product['product-id'],
-							$product['quantity'],
-							$product['unit-price'],
-							$product['total']
+					function(array $item) {
+						return new OrderItemDTO(
+							$item['product-id'],
+							$item['quantity'],
+							$item['unit-price'],
+							$item['total']
 						);
 					},
 					$decodedRequest['items']
@@ -45,7 +45,7 @@ final class CalculateDiscountController extends AbstractController
 				$decodedRequest['total']
 			));
 			return $this->json(
-				$result->toArray(),
+				$response->__toArray(),
 				JsonResponse::HTTP_OK
 			); 
 		} catch(InvalidJsonException $e) {

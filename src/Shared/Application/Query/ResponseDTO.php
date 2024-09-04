@@ -6,5 +6,5 @@ namespace App\Shared\Application\Query;
 
 interface ResponseDTO
 {
-	public function toArray(): array;
+	public function __toArray(): array;
 }

@@ -13,7 +13,7 @@ final class DiscountedTotalResponse implements ResponseDTO
 		private array $discountsAppliedToTotal
 	){}
 
-	public function toArray(): array
+	public function __toArray(): array
 	{
 		return [
 			'total' => $this->total,

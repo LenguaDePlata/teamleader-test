@@ -2,26 +2,28 @@
 
 declare(strict_types=1);
 
-namespace App\Discounts\Application\DTO;
+namespace App\Discounts\Application\Query\CalculateDiscount;
 
 use App\Shared\Application\Query\ResponseDTO;
 
-final class OrderLineResponse implements ResponseDTO
+final class DiscountedOrderItemResponse implements ResponseDTO
 {
 	public function __construct(
 		private string $productId,
 		private int $quantity,
 		private float $unitPrice,
-		private float $total
+		private float $total,
+		private array $discountsAppliedToItem
 	){}
 
-	public function toArray(): array
+	public function __toArray(): array
 	{
 		return [
 			'product-id' => $this->productId,
 			'quantity' => $this->quantity,
 			'unit-price' => $this->unitPrice,
-			'total' => $this->total
+			'total' => $this->total,
+			'discounts-applied-to-item' => $this->discountsAppliedToItem
 		];
 	}
 }

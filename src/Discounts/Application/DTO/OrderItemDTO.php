@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Discounts\Application\DTO\ProductDTO;
+namespace App\Discounts\Application\DTO;
 
-final class ProductDTO
+final class OrderItemDTO
 {
 	public function __construct(
 		private string $productId,
