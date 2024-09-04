@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Discounts\Application\Query\CalculateDiscount;
 
-class CalculateDiscountQuery
+final class CalculateDiscountQuery
 {
 	public function __construct(
-		private readonly int $id,
-		private readonly int $customerId,
+		private int $id,
+		private int $customerId,
 		/** @var ProductDTO[] $products */
-		private readonly array $products,
-		private readonly float $total
-	) {}
+		private array $products,
+		private float $total
+	){}
 
 	public function getId(): int
 	{

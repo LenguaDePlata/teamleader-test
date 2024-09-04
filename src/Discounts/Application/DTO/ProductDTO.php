@@ -7,10 +7,10 @@ namespace App\Discounts\Application\DTO\ProductDTO;
 final class ProductDTO
 {
 	public function __construct(
-		private readonly string $productId,
-		private readonly int $quantity,
-		private readonly float $unitPrice,
-		private readonly float $total
+		private string $productId,
+		private int $quantity,
+		private float $unitPrice,
+		private float $total
 	){}
 
 	public function getProductId(): string
