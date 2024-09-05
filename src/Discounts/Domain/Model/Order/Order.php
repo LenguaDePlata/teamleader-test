@@ -4,6 +4,15 @@ declare(strict_types=1);
 
 namespace App\Discounts\Domain\Model\Order;
 
+use App\Discounts\Domain\Composite\Discount\Discount;
+use App\Discounts\Domain\Composite\Discount\DiscountComposite;
+use App\Discounts\Domain\Composite\Discount\ForEveryFiveProductsOfCategorySwitchesGetOneFree;
+use App\Discounts\Domain\Composite\Discount\TenPercentOffWholeOrder;
+use App\Discounts\Domain\Composite\Discount\TwentyPercentOffCheapestProductOfCategoryTools;
+use App\Discounts\Domain\Specification\DiscountCheck\DiscountCheck;
+use App\Discounts\Domain\Specification\DiscountCheck\FiveProductsOfCategorySwitches;
+use App\Discounts\Domain\Specification\DiscountCheck\TwoOrMoreProductsOfCategoryTools;
+use App\Discounts\Domain\Specification\DiscountCheck\TotalOverOneThousand;
 use App\Discounts\Domain\ValueObject\Customer\CustomerId;
 use App\Discounts\Domain\ValueObject\Order\AppliedDiscounts;
 use App\Discounts\Domain\ValueObject\Order\OrderId;
@@ -33,8 +42,46 @@ class Order
 		$this->total = new Amount($total);
 	}
 
-	public function applyDiscounts(): void
-	{}
+
+	/**
+		@throws UndefinedDiscountCheckException
+	*/
+	public function applyDiscounts(DiscountCheck ...$discountChecks): void
+	{
+		$discounts = $this->getDiscountsToApply(...$discountChecks);
+		$discounts->apply($this);
+	}
+
+
+	/**
+		@throws UndefinedDiscountCheckException
+	*/
+	private function getDiscountsToApply(DiscountCheck ...$discountChecks): DiscountComposite
+	{
+		$discounts = new DiscountComposite();
+		foreach ($discountChecks as $discountCheck) {
+			if ($discountCheck->isSatisfiedBy($this)) {
+				$discounts->add($this->getDiscountInstanceFromCheck($discountCheck));
+			}
+		}
+		return $discounts;
+	}
+
+	/**
+		@throws UndefinedDiscountCheckException
+	*/
+	private function getDiscountInstanceFromCheck(DiscountCheck $discountCheck): Discount
+	{
+		if ($discountCheck instanceof FiveProductsOfCategorySwitches) {
+			return new ForEveryFiveProductsOfCategorySwitchesGetOneFree();
+		} else if ($discountCheck instanceof TwoOrMoreProductsOfCategoryTools) {
+			return new TwentyPercentOffCheapestProductOfCategoryTools();
+		} else if ($discountCheck instanceof TotalOverOneThousand) {
+			return new TenPercentOffWholeOrder();
+		} else {
+			throw new UndefinedDiscountCheckException(get_class($discountCheck));
+		}
+	}
 
 	public function total(): Amount
 	{

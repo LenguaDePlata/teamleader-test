@@ -6,26 +6,37 @@ namespace App\Discounts\Application\Query\CalculateDiscount;
 
 use App\Discounts\Application\Assembler\CalculateDiscountResponseAssembler;
 use App\Discounts\Domain\Builder\OrderBuilder;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 class CalculateDiscountHandler
 {
 	public function __construct(
 		private OrderBuilder $orderBuilder,
-		private CalculateDiscountResponseAssembler $calculateDiscountResponseAssembler
+		private CalculateDiscountResponseAssembler $calculateDiscountResponseAssembler,
+		/** @var DiscountCheck[] $discountChecks */
+		#[AutowireIterator('app.discounts.discount_check')]
+		private iterable $discountChecks
 	){}
 
+	
+	/**
+		@throws UnexpectedDiscountErrorException
+	*/
 	public function handle(CalculateDiscountQuery $query): CalculateDiscountResponse
 	{
-		$order = $this->orderBuilder->build(
-			$query->getId(),
-			$query->getCustomerId(),
-			$query->getOrderItems(),
-			$query->getTotal()
-		);
+		try {
+			$order = $this->orderBuilder->build(
+				$query->getId(),
+				$query->getCustomerId(),
+				$query->getOrderItems(),
+				$query->getTotal()
+			);
 
-		// Redirect to domain function to apply discounts (composite for each discount, specification to check which to add to the composite)
-		$order->applyDiscounts();
-		
-		return $this->calculateDiscountResponseAssembler->toDTO($order, $query);
+			$order->applyDiscounts(...$discountChecks);
+			
+			return $this->calculateDiscountResponseAssembler->toDTO($order, $query);
+		} catch (UndefinedDiscountCheckException $e) {
+			throw new UnexpectedDiscountErrorException($e);
+		}
 	}
 }

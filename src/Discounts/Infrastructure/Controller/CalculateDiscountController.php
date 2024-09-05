@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Discounts\Infrastructure\Controller;
 
 use App\Discounts\Application\DTO\OrderItemDTO;
+use App\Discounts\Application\Exception\UnexpectedDiscountErrorException;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountHandler;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountQuery;
 use App\Shared\Infrastructure\Validator\RequestValidator;
@@ -58,7 +59,7 @@ final class CalculateDiscountController extends AbstractController
 				$this->getViolationsArray(),
 				JsonResponse::HTTP_BAD_REQUEST
 			);
-		} catch(Exception $e) {
+		} catch(UnexpectedDiscountErrorException|Exception $e) {
 			return $this->json(
 				['error' => $e->getMessage()],
 				JsonResponse::HTTP_INTERNAL_SERVER_ERROR
