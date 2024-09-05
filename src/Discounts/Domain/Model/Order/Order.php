@@ -14,7 +14,7 @@ use App\Discounts\Domain\Specification\DiscountCheck\FiveProductsOfCategorySwitc
 use App\Discounts\Domain\Specification\DiscountCheck\TwoOrMoreProductsOfCategoryTools;
 use App\Discounts\Domain\Specification\DiscountCheck\TotalOverOneThousand;
 use App\Discounts\Domain\ValueObject\Customer\CustomerId;
-use App\Discounts\Domain\ValueObject\Order\AppliedDiscounts;
+use App\Discounts\Domain\ValueObject\Order\AppliedDiscount;
 use App\Discounts\Domain\ValueObject\Order\OrderId;
 use App\Discounts\Domain\ValueObject\Shared\Amount;
 
@@ -25,7 +25,8 @@ class Order
 	/** @var OrderItem[] $orderItems */
 	private array $orderLines;
 	private Amount $total;
-	private AppliedDiscounts $discountsAppliedToTotal;
+	/** @var AppliedDiscount[] $discountsAppliedToTotal */
+	private array $discountsAppliedToTotal;
 
 	/**
 		@param OrderItem[] $orderItems
@@ -96,8 +97,21 @@ class Order
 		return $this->orderItems;
 	}
 
-	public function discountsAppliedToTotal(): AppliedDiscounts|null
+	/**
+		@return AppliedDiscount[]
+	*/
+	public function discountsAppliedToTotal(): array
 	{
-		return isset($this->discountsAppliedToTotal) ? $this->discountsAppliedToTotal : null;
+		return $this->discountsAppliedToTotal;
+	}
+
+	/**
+		@param OrderItem[] $orderItems
+	*/
+	public function addOrderItems(array $orderItems): void
+	{
+		foreach ($orderItems as $orderItem) {
+			$this->orderItems[] = $orderItem;
+		}
 	}
 }

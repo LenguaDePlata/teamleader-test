@@ -8,6 +8,7 @@ use App\Discounts\Domain\Model\Order\Order;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('app.discounts.discount_check')]
-interface DiscountCheck {
-	public function isSatisfiedBy(Order $order): bool;
+interface DiscountCheck
+{
+	public function isSatisfiedBy(Order $order): boolean;
 }

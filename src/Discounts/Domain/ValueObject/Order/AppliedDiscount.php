@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Discounts\Domain\ValueObject\Order;
 
-final class AppliedDiscounts
+final class AppliedDiscount
 {
 	public function __construct(
 		private string $value

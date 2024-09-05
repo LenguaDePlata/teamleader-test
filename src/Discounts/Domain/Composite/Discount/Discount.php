@@ -6,6 +6,7 @@ namespace App\Discounts\Domain\Composite\Discount;
 
 use App\Discounts\Domain\Model\Order\Order;
 
-interface Discount {
+interface Discount
+{
 	public function apply(Order $order): void;
 }

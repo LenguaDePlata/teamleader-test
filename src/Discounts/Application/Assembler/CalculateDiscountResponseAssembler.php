@@ -12,6 +12,7 @@ use App\Discounts\Application\Query\CalculateDiscount\DiscountedOrderItemRespons
 use App\Discounts\Application\Query\CalculateDiscount\DiscountedTotalResponse;
 use App\Discounts\Domain\Model\Order\Order;
 use App\Discounts\Domain\Model\Order\OrderItem;
+use App\Discounts\Domain\ValueObject\Order\AppliedDiscount;
 
 class CalculateDiscountResponseAssembler
 {
@@ -41,14 +42,24 @@ class CalculateDiscountResponseAssembler
 						$orderItem->quantity()->__toInt(),
 						$orderItem->unitPrice()->__toFloat(),
 						$orderItem->total()->__toFloat(),
-						$orderItem->discountsAppliedToItem()->__toString()
+						array_reduce(
+							$orderItem->discountsAppliedToItem(),
+							function (string $carry, AppliedDiscount $appliedDiscount) {
+								return $carry . ',' . $appliedDiscount->__toString();
+							}
+						)
 					);
 				},
 				$order->orderItems()
 			),
 			new DiscountedTotalResponse(
 				$order->total()->__toFloat(),
-				$order->discountsAppliedToTotal()->__toString()
+				array_reduce(
+					$order->discountsAppliedToTotal(),
+					function (string $carry, AppliedDiscount $appliedDiscount) {
+						return $carry . ',' . $appliedDiscount->__toString();
+					}
+				)
 			)
 		);
 	}

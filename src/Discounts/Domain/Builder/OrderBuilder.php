@@ -15,6 +15,7 @@ class OrderBuilder
 		array $orderItemsDTO,
 		float $total
 	): Order {
+		// TODO: initialize Product objects from database for each order item
 		$orderItems = array_map(
 			function (OrderItemDTO $orderItemDTO) {
 				return new OrderItem(

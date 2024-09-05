@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Discounts\Domain\Model\Order;
 
-use App\Discounts\Domain\ValueObject\Order\AppliedDiscounts;
+use App\Discounts\Domain\ValueObject\Order\AppliedDiscount;
 use App\Discounts\Domain\ValueObject\Order\Quantity;
 use App\Discounts\Domain\ValueObject\Product\ProductId;
 use App\Discounts\Domain\ValueObject\Shared\Amount;
@@ -15,7 +15,8 @@ class OrderItem
 	private Quantity $quantity;
 	private Amount $unitPrice;
 	private Amount $total;
-	private AppliedDiscounts $discountsAppliedToItem;
+	/** @var AppliedDiscount[] $discountsAppliedToItem */
+	private array $discountsAppliedToItem = [];
 
 	public function __construct(
 		string $productId,
@@ -34,6 +35,11 @@ class OrderItem
 		return $this->productId;
 	}
 
+	public function product(): Product
+	{
+		return $this->product();
+	}
+
 	public function quantity(): Quantity
 	{
 		return $this->quantity;
@@ -49,8 +55,14 @@ class OrderItem
 		return $this->total;
 	}
 
-	public function discountsAppliedToItem(): AppliedDiscounts|null
+	/** @return AppliedDiscount[] */
+	public function discountsAppliedToItem(): array
 	{
-		return isset($this->discountsAppliedToItem) ? $this->discountsAppliedToItem : null;
+		return $this->discountsAppliedToItem;
+	}
+
+	public function addAppliedDiscount(string $discountName): void
+	{
+		$this->discountsAppliedToItem[] = new AppliedDiscount($discountName);
 	}
 }
