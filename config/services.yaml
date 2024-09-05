@@ -17,6 +17,7 @@ services:
         resource: '../src/Discounts/'
         exclude:
            - '../src/Discounts/Domain/Model/'
+           - '../src/Discounts/Domain/ValueObject/'
            - '../src/Discounts/Application/DTO/'
     App\Shared\:
         resource: '../src/Shared/'

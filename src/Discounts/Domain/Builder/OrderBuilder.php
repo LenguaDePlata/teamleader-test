@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Discounts\Domain\Builder;
 
 use App\Discounts\Domain\Model\Order\Order;
-use App\Discounts\Domain\Model\Order\OrderLine;
+use App\Discounts\Domain\Model\Order\OrderItem;
 
 class OrderBuilder
 {
