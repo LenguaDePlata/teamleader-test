@@ -15,8 +15,9 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\Discounts\:
         resource: '../src/Discounts/'
-        #exclude:
-        #    - '../src/Discounts/Domain/'
+        exclude:
+           - '../src/Discounts/Domain/Model/'
+           - '../src/Discounts/Application/DTO/'
     App\Shared\:
         resource: '../src/Shared/'
 

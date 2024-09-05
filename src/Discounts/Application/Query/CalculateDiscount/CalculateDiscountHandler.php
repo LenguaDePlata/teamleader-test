@@ -6,29 +6,23 @@ namespace App\Discounts\Application\Query\CalculateDiscount;
 
 use App\Discounts\Application\DTO\OrderItemResponse;
 use App\Discounts\Application\DTO\OrderItemDTO;
+use App\Discounts\Domain\Builder\OrderBuilder;
 
 class CalculateDiscountHandler
 {
+	public function __construct(
+		private OrderBuilder $orderBuilder
+	){}
+
 	public function handle(CalculateDiscountQuery $query): CalculateDiscountResponse
 	{
-		// Create order object from DTO
-		$orderItems = array_map(
-			function (OrderItemDTO $orderLineDTO) {
-				return OrderItem::create(
-					$orderItem->getProductId(),
-					$orderItem->getQuantity(),
-					$orderItem->getUnitPrice(),
-					$orderItem->getTotal()
-				);
-			},
-			$query->getOrderItems()
-		);
-		$order = Order::create(
+		$order = $this->orderBuilder->build(
 			$query->getId(),
 			$query->getCustomerId(),
-			$orderItems,
+			$query->getOrderItems(),
 			$query->getTotal()
 		);
+
 		// Redirect to domain function to apply discounts (composite for each discount, specification to check which to add to the composite)
 		$order->applyDiscounts();
 		// Construct response object from new order and original values
