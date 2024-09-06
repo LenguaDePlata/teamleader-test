@@ -6,32 +6,55 @@ namespace App\Discounts\Domain\Builder;
 
 use App\Discounts\Domain\Model\Order\Order;
 use App\Discounts\Domain\Model\Order\OrderItem;
+use App\Discounts\Domain\Repository\ProductRepository;
 
 class OrderBuilder
 {
+	public function __construct(
+		private ProductRepository $productRepository
+	){}
+
+	/**
+		@param OrderItemDTO[] $orderItemDTOs
+		@throws ProductNotFoundException
+	*/
 	public function build(
 		int $id,
 		int $customerId,
-		array $orderItemsDTO,
+		array $orderItemDTOs,
 		float $total
 	): Order {
-		// TODO: initialize Product objects from database for each order item
-		$orderItems = array_map(
-			function (OrderItemDTO $orderItemDTO) {
-				return new OrderItem(
-					$orderItemDTO->getProductId(),
-					$orderItemDTO->getQuantity(),
-					$orderItemDTO->getUnitPrice(),
-					$orderItemDTO->getTotal()
-				);
-			},
-			$orderItemsDTO
-		);
+		$orderItems = $this->generateOrderItems($orderItemsDTO);
 		return new Order(
 			$id,
 			$customerId,
 			$orderItems,
 			$total
 		);
+	}
+
+	/**
+		@param OrderItemDTO[] $orderItemDTOs
+		@return OrderItem[]
+		@throws ProductNotFoundException
+	*/
+	private function generateOrderItems(array $orderItemDTOs): array
+	{
+		$orderItems = [];
+		foreach($orderItemDTOs as $dto) {
+			$product = $this->productRepository->findById(
+				new ProductId($dto->getProductId())
+			);
+			if ($product === null) {
+				throw new ProductNotFoundException();
+			}
+			$orderItems[] =new OrderItem(
+				$product,
+				$orderItemDTO->getQuantity(),
+				$orderItemDTO->getUnitPrice(),
+				$orderItemDTO->getTotal()
+			);
+		}
+		return $orderItems;
 	}
 }

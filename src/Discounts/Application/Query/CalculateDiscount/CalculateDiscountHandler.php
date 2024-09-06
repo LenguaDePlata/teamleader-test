@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Discounts\Application\Query\CalculateDiscount;
 
 use App\Discounts\Application\Assembler\CalculateDiscountResponseAssembler;
+use App\Discounts\Application\Exception\UnexpectedDiscountErrorException;
+use App\Discounts\Application\Exception\ProductNotFoundException as ProductNotFoundApplicationException;
 use App\Discounts\Domain\Builder\OrderBuilder;
+use App\Discounts\Domain\Exception\UndefinedDiscountCheckException;
+use App\Discounts\Domain\Exception\ProductNotFoundException;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 class CalculateDiscountHandler
@@ -21,6 +25,7 @@ class CalculateDiscountHandler
 	
 	/**
 		@throws UnexpectedDiscountErrorException
+		@throws ProductNotFoundApplicationException
 	*/
 	public function handle(CalculateDiscountQuery $query): CalculateDiscountResponse
 	{
@@ -37,6 +42,8 @@ class CalculateDiscountHandler
 			return $this->calculateDiscountResponseAssembler->toDTO($order, $query);
 		} catch (UndefinedDiscountCheckException $e) {
 			throw new UnexpectedDiscountErrorException($e);
+		} catch (ProductNotFoundException $e) {
+			throw new ProductNotFoundApplicationException($e);
 		}
 	}
 }

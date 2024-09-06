@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Discounts\Domain\ValueObject\Shared;
 
-final class Amount
+class Amount
 {
 	public function __construct(
 		private float $value

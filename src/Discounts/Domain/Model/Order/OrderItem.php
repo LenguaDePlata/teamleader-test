@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Discounts\Domain\Model\Order;
 
+use App\Discounts\Domain\Model\Product\Product;
 use App\Discounts\Domain\ValueObject\Order\AppliedDiscount;
 use App\Discounts\Domain\ValueObject\Order\Quantity;
-use App\Discounts\Domain\ValueObject\Product\ProductId;
 use App\Discounts\Domain\ValueObject\Shared\Amount;
 
 class OrderItem
 {
-	private ProductId $productId;
+	private Product $product;
 	private Quantity $quantity;
 	private Amount $unitPrice;
 	private Amount $total;
@@ -19,20 +19,15 @@ class OrderItem
 	private array $discountsAppliedToItem = [];
 
 	public function __construct(
-		string $productId,
+		Product $product,
 		int $quantity,
 		float $unitPrice,
 		float $total
 	) {
-		$this->productId = new ProductId($productId);
+		$this->product = $product;
 		$this->quantity = new Quantity($quantity);
 		$this->unitPrice = new Amount($total);
 		$this->total = new Amount($total);
-	}
-
-	public function productId(): ProductId
-	{
-		return $this->productId;
 	}
 
 	public function product(): Product

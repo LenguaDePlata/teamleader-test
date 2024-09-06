@@ -38,7 +38,7 @@ class CalculateDiscountResponseAssembler
 			array_map(
 				function (OrderItem $orderItem) {
 					return new DiscountedOrderItemResponse(
-						$orderItem->productId()->__toString(),
+						$orderItem->product()->id()->__toString(),
 						$orderItem->quantity()->__toInt(),
 						$orderItem->unitPrice()->__toFloat(),
 						$orderItem->total()->__toFloat(),
