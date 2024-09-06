@@ -38,4 +38,9 @@ class Product
 	{
 		return $this->category;
 	}
+
+	public function price(): Price
+	{
+		return $this->price;
+	}
 }

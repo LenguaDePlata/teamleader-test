@@ -114,4 +114,19 @@ class Order
 			$this->orderItems[] = $orderItem;
 		}
 	}
+
+	public function setOrderItem(OrderItem $orderItem, int $key): void
+	{
+		$this->orderItem[$key] = $orderItem;
+	}
+
+	public function addAppliedDiscount(string $discountName): void
+	{
+		$this->discountsAppliedToTotal[] = new AppliedDiscount($discountName);
+	}
+
+	public function setTotal(float $total): void
+	{
+		$this->total = new Amount($total);
+	}
 }

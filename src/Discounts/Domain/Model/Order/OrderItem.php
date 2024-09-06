@@ -26,7 +26,7 @@ class OrderItem
 	) {
 		$this->product = $product;
 		$this->quantity = new Quantity($quantity);
-		$this->unitPrice = new Amount($total);
+		$this->unitPrice = new Amount($unitPrice);
 		$this->total = new Amount($total);
 	}
 
@@ -59,5 +59,15 @@ class OrderItem
 	public function addAppliedDiscount(string $discountName): void
 	{
 		$this->discountsAppliedToItem[] = new AppliedDiscount($discountName);
+	}
+
+	public function setTotal(float $total): void
+	{
+		$this->total = new Amount($total);
+	}
+
+	public function setUnitPrice(): void
+	{
+		$this->unitPrice = new Amount($unitPrice);
 	}
 }
