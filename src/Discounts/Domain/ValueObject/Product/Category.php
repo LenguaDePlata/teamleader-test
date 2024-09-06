@@ -15,7 +15,7 @@ final class Category
 		return $this->value;
 	}
 
-	public function equalsTo(int $category): boolean
+	public function equalsTo(int $category): bool
 	{
 		return $this->value === $category;
 	}

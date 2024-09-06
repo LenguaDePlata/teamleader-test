@@ -10,5 +10,5 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('app.discounts.discount_check')]
 interface DiscountCheck
 {
-	public function isSatisfiedBy(Order $order): boolean;
+	public function isSatisfiedBy(Order $order): bool;
 }

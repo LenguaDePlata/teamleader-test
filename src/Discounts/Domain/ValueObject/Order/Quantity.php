@@ -15,7 +15,7 @@ final class Quantity
 		return $this->value;
 	}
 
-	public function isEqualToOrGreaterThan(int $quantity): boolean
+	public function isEqualToOrGreaterThan(int $quantity): bool
 	{
 		return $this->value >= $quantity;
 	}
