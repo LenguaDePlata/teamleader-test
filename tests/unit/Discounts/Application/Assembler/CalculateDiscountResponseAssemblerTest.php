@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Discounts\Application\Assembler;
 
+use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountQuery;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountResponse;
 use App\Discounts\Application\Assembler\CalculateDiscountResponseAssembler;
+use App\Discounts\Domain\Model\Order\Order;
 use App\Tests\Mother\Discounts\OrderMother;
 use App\Tests\Mother\Discounts\CalculateDiscountQueryMother;
 use PHPUnit\Framework\TestCase;
@@ -20,18 +22,39 @@ final class CalculateDiscountResponseAssemblerTest extends TestCase
 		parent::setUp();
 	}
 
-	public function testItCreatesAValidResponseTypeWithTheValuesInTheRightPlace(): void
+	public function testItCreatesAValidResponseWithOneItemAndNoDiscounts(): void
 	{
 		//Arrange
-		$order = OrderMother::aValidOrder();
-		$query = CalculateDiscountQueryMother::aValidCalculateDiscountQuery();
+		$order = OrderMother::aValidOrderWithOneItemAndNoDiscounts();
+		$query = CalculateDiscountQueryMother::aValidQueryWithOneItem();
 
 		// Act
 		$response = $this->assembler->toDTO($order, $query);
 
 		// Assert
 		$this->assertInstanceOf(CalculateDiscountResponse::class, $response);
+		$this->assertResponseArrayDataIsValid($query, $order, $response);
+	}
 
+	public function testItCreatesAValidResponseWithMultipleItemsAndDiscounts(): void
+	{
+		//Arrange
+		$order = OrderMother::aValidOrderWithMultipleItemsAndDiscounts();
+		$query = CalculateDiscountQueryMother::aValidQueryWithMultipleItems();
+
+		// Act
+		$response = $this->assembler->toDTO($order, $query);
+
+		// Assert
+		$this->assertInstanceOf(CalculateDiscountResponse::class, $response);
+		$this->assertResponseArrayDataIsValid($query, $order, $response);
+	}
+
+	private function assertResponseArrayDataIsValid(
+		CalculateDiscountQuery $query,
+		Order $order,
+		CalculateDiscountResponse $response
+	): void {
 		$responseArray = $response->__toArray();
 		$this->assertEquals($query->getId(), $responseArray['id']);
 		$this->assertEquals($query->getCustomerId(), $responseArray['customer-id']);

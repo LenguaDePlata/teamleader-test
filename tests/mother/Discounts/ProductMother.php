@@ -17,4 +17,24 @@ final class ProductMother
 			price: 4.99
 		);
 	}
+
+	public static function aCheapToolProduct(): Product
+	{
+		return new Product(
+			id: "A101",
+			description: "Screwdriver",
+			category: 1,
+			price: 9.75
+		);
+	}
+
+	public static function anExpensiveToolProduct(): Product
+	{
+		return new Product(
+			id: "A102",
+			description: "Electric screwdriver",
+			category: 1,
+			price: 49.50
+		);
+	}
 }
