@@ -37,7 +37,7 @@ class CalculateDiscountHandler
 				$query->getTotal()
 			);
 
-			$order->applyDiscounts(...$discountChecks);
+			$order->applyDiscounts(...$this->discountChecks);
 			
 			return $this->calculateDiscountResponseAssembler->toDTO($order, $query);
 		} catch (UndefinedDiscountCheckException $e) {

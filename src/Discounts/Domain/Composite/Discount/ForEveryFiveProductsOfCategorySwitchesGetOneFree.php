@@ -6,6 +6,7 @@ namespace App\Discounts\Domain\Composite\Discount;
 
 use App\Discounts\Domain\Enum\Product\ProductCategory;
 use App\Discounts\Domain\Model\Order\Order;
+use App\Discounts\Domain\Model\Order\OrderItem;
 
 class ForEveryFiveProductsOfCategorySwitchesGetOneFree implements Discount
 {
