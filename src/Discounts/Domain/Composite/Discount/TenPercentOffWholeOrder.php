@@ -12,7 +12,7 @@ class TenPercentOffWholeOrder implements Discount
 
 	public function apply(Order $order): void
 	{
-		$orderTotal = (float)$order->total();
+		$orderTotal = $order->total()->__toFloat();
 		$discountedTotal = round($orderTotal*0.9, 2);
 		$order->setTotal($discountedTotal);
 		$order->addAppliedDiscount(self::DISCOUNT_NAME);

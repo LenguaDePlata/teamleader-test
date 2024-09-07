@@ -13,7 +13,7 @@ final class DiscountedOrderItemResponse implements ResponseDTO
 		private int $quantity,
 		private float $unitPrice,
 		private float $total,
-		private array $discountsAppliedToItem
+		private string $discountsAppliedToItem
 	){}
 
 	public function __toArray(): array

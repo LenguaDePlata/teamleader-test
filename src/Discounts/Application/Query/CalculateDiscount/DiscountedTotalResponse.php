@@ -10,7 +10,7 @@ final class DiscountedTotalResponse implements ResponseDTO
 {
 	public function __construct(
 		private float $total,
-		private array $discountsAppliedToTotal
+		private string $discountsAppliedToTotal
 	){}
 
 	public function __toArray(): array

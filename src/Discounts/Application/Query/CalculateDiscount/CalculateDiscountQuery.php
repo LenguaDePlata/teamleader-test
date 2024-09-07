@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Discounts\Application\Query\CalculateDiscount;
 
+use App\Discounts\Application\DTO\OrderItemDTO;
+
 final class CalculateDiscountQuery
 {
 	public function __construct(

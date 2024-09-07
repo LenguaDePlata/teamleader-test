@@ -16,7 +16,7 @@ class TwoOrMoreProductsOfCategoryTools implements TwoOrMoreProductsOfCategoryToo
 		foreach ($order->orderItems() as $orderItem) {
 			/** @var OrderItem $orderItem */
 			if ($orderItem->product()->category()->equalsTo(ProductCategory::Tools->id())) {
-				$totalToolProducts += (int)$orderItem->quantity();
+				$totalToolProducts += $orderItem->quantity()->__toInt();
 				if ($totalToolProducts >= 2) {
 					return true;
 				}

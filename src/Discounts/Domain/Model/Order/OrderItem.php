@@ -32,7 +32,7 @@ class OrderItem
 
 	public function product(): Product
 	{
-		return $this->product();
+		return $this->product;
 	}
 
 	public function quantity(): Quantity

@@ -46,7 +46,8 @@ class CalculateDiscountResponseAssembler
 							$orderItem->discountsAppliedToItem(),
 							function (string $carry, AppliedDiscount $appliedDiscount) {
 								return $carry . ',' . $appliedDiscount->__toString();
-							}
+							},
+							''
 						)
 					);
 				},
@@ -58,7 +59,8 @@ class CalculateDiscountResponseAssembler
 					$order->discountsAppliedToTotal(),
 					function (string $carry, AppliedDiscount $appliedDiscount) {
 						return $carry . ',' . $appliedDiscount->__toString();
-					}
+					},
+					''
 				)
 			)
 		);

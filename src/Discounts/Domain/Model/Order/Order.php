@@ -23,10 +23,10 @@ class Order
 	private OrderId $id;
 	private CustomerId $customerId;
 	/** @var OrderItem[] $orderItems */
-	private array $orderLines;
+	private array $orderItems;
 	private Amount $total;
 	/** @var AppliedDiscount[] $discountsAppliedToTotal */
-	private array $discountsAppliedToTotal;
+	private array $discountsAppliedToTotal = [];
 
 	/**
 		@param OrderItem[] $orderItems

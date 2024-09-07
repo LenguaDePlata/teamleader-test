@@ -11,6 +11,6 @@ class TotalOverOneThousand implements TotalOverOneThousandInterface
 {
 	public function isSatisfiedBy(Order $order): bool
 	{
-		return (float)$order->total() > 1000.00;
+		return $order->total()->__toFloat() > 1000.00;
 	}
 }

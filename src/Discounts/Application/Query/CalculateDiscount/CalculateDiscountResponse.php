@@ -41,7 +41,7 @@ final class CalculateDiscountResponse implements ResponseDTO
 					},
 					$this->discountedOrderItems
 				),
-				'total' => $this->discountedTotal->toArray()
+				'total' => $this->discountedTotal->__toArray()
 			]
 		];
 	}
