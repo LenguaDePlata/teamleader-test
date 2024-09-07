@@ -60,7 +60,22 @@ final class OrderBuilderTest
 
 	public function testItThrowsAnExceptionIfProductDoesNotExist(): void
 	{
+		// Arrange
+		$id = self::AN_ORDER_ID;
+		$customerId = self::A_CUSTOMER_ID;
+		$orderItemDTOs = [OrderItemDTOMother::aTenSwitchProductItemDTO()];
+		$total = $orderItemDTOs[0]->getTotal();
 
+		$this->givenTheProductIsNotFound();
+		$this->expectException(ProductNotFoundException::class);
+
+		// Act
+		$this->orderBuilder->build(
+			$id,
+			$customerId,
+			$orderItemDTOs,
+			$total
+		);
 	}
 
 	private function givenTheProductIsFound(Product $product): void
@@ -70,6 +85,14 @@ final class OrderBuilderTest
 			->method('findById')
 			->with($this->isInstanceOf(ProductId::class))
 			->willReturn($product);
+	}
+
+	private function givenTheProductIsNotFound(): void
+	{
+		$this->productRepositoryMock
+			->expects($this->once())
+			->method('findById')
+			->willReturn(null);
 	}
 
 	/**

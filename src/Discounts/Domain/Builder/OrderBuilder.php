@@ -42,11 +42,10 @@ class OrderBuilder
 	{
 		$orderItems = [];
 		foreach($orderItemDTOs as $dto) {
-			$product = $this->productRepository->findById(
-				new ProductId($dto->getProductId())
-			);
+			$productId = new ProductId($dto->getProductId());
+			$product = $this->productRepository->findById($productId);
 			if ($product === null) {
-				throw new ProductNotFoundException();
+				throw new ProductNotFoundException($productId);
 			}
 			$orderItems[] =new OrderItem(
 				$product,
