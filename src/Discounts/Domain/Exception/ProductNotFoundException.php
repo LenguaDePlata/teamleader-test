@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Discounts\Domain\Exception;
 
+use App\Discounts\Domain\ValueObject\Product\ProductId;
 use Exception;
 
 class ProductNotFoundException extends Exception

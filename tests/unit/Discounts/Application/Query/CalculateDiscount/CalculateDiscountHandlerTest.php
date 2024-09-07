@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Discounts\Application\Query\CalculateDiscount;
 
+use App\Discounts\Application\Exception\ProductNotFoundException as ProductNotFoundApplicationException;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountHandler;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountQuery;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountResponse;
 use App\Discounts\Application\Assembler\CalculateDiscountResponseAssembler;
 use App\Discounts\Domain\Builder\OrderBuilder;
+use App\Discounts\Domain\Exception\ProductNotFoundException;
 use App\Discounts\Domain\Model\Order\Order;
 use App\Discounts\Infrastructure\Specification\DiscountCheck\FiveProductsOfCategorySwitches;
 use App\Discounts\Infrastructure\Specification\DiscountCheck\TwoOrMoreProductsOfCategoryTools;
 use App\Discounts\Infrastructure\Specification\DiscountCheck\TotalOverOneThousand;
-use App\Tests\Mother\Discounts\OrderMother;
 use App\Tests\Mother\Discounts\CalculateDiscountQueryMother;
 use App\Tests\Mother\Discounts\CalculateDiscountResponseMother;
+use App\Tests\Mother\Discounts\OrderMother;
+use App\Tests\Mother\Discounts\ProductIdMother;
 use PHPUnit\Framework\TestCase;
 
 final class CalculateDiscountHandlerTest extends TestCase
@@ -74,10 +77,23 @@ final class CalculateDiscountHandlerTest extends TestCase
 	public function testItThrowsApplicationExceptionIfProductIsNotFound(): void
 	{
 		// Arrange
+		$query = CalculateDiscountQueryMother::aValidQueryWithOneItem();
+		$this->orderBuilderMock
+			->expects($this->once())
+			->method('build')
+			->willThrowException(
+				new ProductNotFoundException(ProductIdMother::aWeirdId())
+			);
+		$this->responseAssemblerMock
+			->expects($this->never())
+			->method('toDTO');
+
+		$this->expectException(
+			ProductNotFoundApplicationException::class
+		);
 
 		// Act
-
-		// Assert
+		$this->handler->handle($query);
 	}
 
 	public function testItThrowsApplicationExceptionIfDiscountCheckIsUndefined(): void
