@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Discounts\Application\Query\CalculateDiscount;
 
 use App\Discounts\Application\Exception\ProductNotFoundException as ProductNotFoundApplicationException;
+use App\Discounts\Application\Exception\UnexpectedDiscountErrorException;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountHandler;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountQuery;
 use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountResponse;
 use App\Discounts\Application\Assembler\CalculateDiscountResponseAssembler;
 use App\Discounts\Domain\Builder\OrderBuilder;
 use App\Discounts\Domain\Exception\ProductNotFoundException;
+use App\Discounts\Domain\Exception\UndefinedDiscountCheckException;
 use App\Discounts\Domain\Model\Order\Order;
 use App\Discounts\Infrastructure\Specification\DiscountCheck\FiveProductsOfCategorySwitches;
 use App\Discounts\Infrastructure\Specification\DiscountCheck\TwoOrMoreProductsOfCategoryTools;
@@ -50,22 +52,11 @@ final class CalculateDiscountHandlerTest extends TestCase
 	{
 		// Arrange
 		$query = CalculateDiscountQueryMother::aValidQueryWithOneItem();
-
 		$order = OrderMother::aValidOrderWithOneItemAndNoDiscounts();
-		$this->orderBuilderMock
-			->expects($this->once())
-			->method('build')
-			->willReturn($order);
-
 		$response = CalculateDiscountResponseMother::aValidResponseWithOneItemAndNoDiscounts();
-		$this->responseAssemblerMock
-			->expects($this->once())
-			->method('toDTO')
-			->with(
-				$this->isInstanceOf(Order::class),
-				$this->isInstanceOf(CalculateDiscountQuery::class)
-			)
-			->willReturn($response);
+
+		$this->givenTheBuilderCreatesThisOrder($order);
+		$this->givenTheAssemblerGeneratesThisResponse($response);
 
 		// Act
 		$response = $this->handler->handle($query);
@@ -78,15 +69,9 @@ final class CalculateDiscountHandlerTest extends TestCase
 	{
 		// Arrange
 		$query = CalculateDiscountQueryMother::aValidQueryWithOneItem();
-		$this->orderBuilderMock
-			->expects($this->once())
-			->method('build')
-			->willThrowException(
-				new ProductNotFoundException(ProductIdMother::aWeirdId())
-			);
-		$this->responseAssemblerMock
-			->expects($this->never())
-			->method('toDTO');
+
+		$this->givenTheBuilderThrowsProductNotFoundException();
+		$this->givenTheResponseNeverGetsBuilt();
 
 		$this->expectException(
 			ProductNotFoundApplicationException::class
@@ -99,10 +84,61 @@ final class CalculateDiscountHandlerTest extends TestCase
 	public function testItThrowsApplicationExceptionIfDiscountCheckIsUndefined(): void
 	{
 		// Arrange
+		$query = CalculateDiscountQueryMother::aValidQueryWithOneItem();
+		$order = $this->createMock(Order::class);
+		
+		$this->givenTheBuilderCreatesThisOrder($order);
+		$this->givenTheOrderThrowsUndefinedDiscountCheckException($order);
+		$this->givenTheResponseNeverGetsBuilt();
+
+		$this->expectException(UnexpectedDiscountErrorException::class);
 
 		// Act
+		$this->handler->handle($query);
+	}
 
-		// Assert
+	private function givenTheBuilderCreatesThisOrder(Order $order): void
+	{
+		$this->orderBuilderMock
+			->expects($this->once())
+			->method('build')
+			->willReturn($order);
+	}
 
+	private function givenTheAssemblerGeneratesThisResponse(CalculateDiscountResponse $response): void
+	{
+		$this->responseAssemblerMock
+			->expects($this->once())
+			->method('toDTO')
+			->with(
+				$this->isInstanceOf(Order::class),
+				$this->isInstanceOf(CalculateDiscountQuery::class)
+			)
+			->willReturn($response);
+	}
+
+	private function givenTheResponseNeverGetsBuilt(): void
+	{
+		$this->responseAssemblerMock
+			->expects($this->never())
+			->method('toDTO');
+	}
+
+	private function givenTheOrderThrowsUndefinedDiscountCheckException(Order $order): void
+	{
+		$order
+			->expects($this->once())
+			->method('applyDiscounts')
+			->willThrowException(new UndefinedDiscountCheckException('UnknownDiscountCheck'));
+	}
+
+	private function givenTheBuilderThrowsProductNotFoundException(): void
+	{
+		$this->orderBuilderMock
+			->expects($this->once())
+			->method('build')
+			->willThrowException(
+				new ProductNotFoundException(ProductIdMother::aWeirdId())
+			);
 	}
 }
