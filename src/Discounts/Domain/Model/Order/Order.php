@@ -117,7 +117,7 @@ class Order
 
 	public function setOrderItem(OrderItem $orderItem, int $key): void
 	{
-		$this->orderItem[$key] = $orderItem;
+		$this->orderItems[$key] = $orderItem;
 	}
 
 	public function addAppliedDiscount(string $discountName): void

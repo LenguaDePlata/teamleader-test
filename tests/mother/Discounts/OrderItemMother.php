@@ -32,6 +32,16 @@ final class OrderItemMother
 		return $item;
 	}
 
+	public static function aTwoToolProductItem(): OrderItem
+	{
+		return new OrderItem(
+			product: ProductMother::aCheapToolProduct(),
+			quantity: 2,
+			unitPrice: 9.75,
+			total: 19.50
+		);
+	}
+
 	public static function aOneToolProductItem(): OrderItem
 	{
 		return new OrderItem(

@@ -66,7 +66,7 @@ class OrderItem
 		$this->total = new Amount($total);
 	}
 
-	public function setUnitPrice(): void
+	public function setUnitPrice(float $unitPrice): void
 	{
 		$this->unitPrice = new Amount($unitPrice);
 	}

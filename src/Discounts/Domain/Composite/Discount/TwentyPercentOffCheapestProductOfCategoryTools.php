@@ -35,12 +35,15 @@ class TwentyPercentOffCheapestProductOfCategoryTools implements Discount
 		$cheapestTotal = $cheapestOrderItem->total()->__toFloat();
 		$cheapestUnitPrice = $cheapestOrderItem->unitPrice()->__toFloat();
 
-		$discountedTotal = round($cheapestTotal*0.2, 2);
-		$discountedUnitPrice = round($cheapestUnitPrice*0.2, 2);
+		$discountedTotal = round($cheapestTotal*0.8, 2);
+		$discountedUnitPrice = round($cheapestUnitPrice*0.8, 2);
 		$cheapestOrderItem->setTotal($discountedTotal);
 		$cheapestOrderItem->setUnitPrice($discountedUnitPrice);
 		$cheapestOrderItem->addAppliedDiscount(self::DISCOUNT_NAME);
 
 		$order->setOrderItem($cheapestOrderItem, $cheapestOrderItemKey);
+		$order->setTotal(
+			round($order->total()->__toFloat() - $cheapestTotal + $discountedTotal, 2)
+		);
 	}
 }

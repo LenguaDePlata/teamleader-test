@@ -7,7 +7,7 @@ namespace App\Discounts\Domain\ValueObject\Shared;
 class Amount
 {
 	public function __construct(
-		private float $value
+		protected float $value
 	){}
 
 	public function __toFloat(): float
