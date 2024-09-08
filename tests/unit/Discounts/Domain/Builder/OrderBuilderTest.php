@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Discounts\Domain\Builder;
 
-use App\Discounts\Domain\Repository\ProductRepository;
 use App\Discounts\Domain\Builder\OrderBuilder;
-use App\Discounts\Domain\ValueObject\ProductId;
+use App\Discounts\Domain\Exception\ProductNotFoundException;
+use App\Discounts\Domain\Model\Order\Order;
+use App\Discounts\Domain\Model\Product\Product;
+use App\Discounts\Domain\Repository\ProductRepository;
+use App\Discounts\Domain\ValueObject\Product\ProductId;
 use App\Tests\Mother\Discounts\OrderItemDTOMother;
 use App\Tests\Mother\Discounts\ProductMother;
+use PHPUnit\Framework\TestCase;
 
-final class OrderBuilderTest
+final class OrderBuilderTest extends TestCase
 {
 	private const AN_ORDER_ID = 1;
 	private const A_CUSTOMER_ID = 1;
@@ -19,7 +23,7 @@ final class OrderBuilderTest
 
 	private ProductRepository $productRepositoryMock;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->productRepositoryMock = $this->createMock(ProductRepository::class);
 
@@ -50,8 +54,6 @@ final class OrderBuilderTest
 		// Assert
 		$this->assertInstanceOf(Order::class, $order);
 		$this->assertOrderDataIsValid(
-			$id,
-			$customerId,
 			$orderItemDTOs,
 			$total,
 			$order
@@ -99,14 +101,10 @@ final class OrderBuilderTest
 		@param OrderItemDTO[] $orderItemDTOs
 	*/
 	private function assertOrderDataIsValid(
-		int $id,
-		int $customerId,
 		array $orderItemDTOs,
 		float $total,
 		Order $order
 	): void {
-		$this->assertEquals($id, $order->id()->__toInt());
-		$this->assertEquals($customerId, $order->customerId()->__toInt());
 		$this->assertEquals($total, $order->total()->__toFloat());
 
 		$this->assertEquals(

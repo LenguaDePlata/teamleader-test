@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Discounts\Domain\Builder;
 
+use App\Discounts\Domain\Exception\ProductNotFoundException;
 use App\Discounts\Domain\Model\Order\Order;
 use App\Discounts\Domain\Model\Order\OrderItem;
 use App\Discounts\Domain\Repository\ProductRepository;
+use App\Discounts\Domain\ValueObject\Product\ProductId;
 
 class OrderBuilder
 {
@@ -24,7 +26,7 @@ class OrderBuilder
 		array $orderItemDTOs,
 		float $total
 	): Order {
-		$orderItems = $this->generateOrderItems($orderItemsDTO);
+		$orderItems = $this->generateOrderItems($orderItemDTOs);
 		return new Order(
 			$id,
 			$customerId,
@@ -47,11 +49,11 @@ class OrderBuilder
 			if ($product === null) {
 				throw new ProductNotFoundException($productId);
 			}
-			$orderItems[] =new OrderItem(
+			$orderItems[] = new OrderItem(
 				$product,
-				$orderItemDTO->getQuantity(),
-				$orderItemDTO->getUnitPrice(),
-				$orderItemDTO->getTotal()
+				$dto->getQuantity(),
+				$dto->getUnitPrice(),
+				$dto->getTotal()
 			);
 		}
 		return $orderItems;

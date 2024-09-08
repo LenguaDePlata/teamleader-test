@@ -18,12 +18,12 @@ class ForEveryFiveProductsOfCategorySwitchesGetOneFree implements Discount
 		foreach ($order->orderItems() as $orderItem) {
 			/** @var OrderItem $orderItem */
 			if ($orderItem->quantity()->isEqualToOrGreaterThan(5) && $orderItem->product()->category()->equalsTo(ProductCategory::Switches->id())) {
-				$howManyFreeProducts = $orderItem->quantity()->__toInt() % 5;
+				$howManyFreeProducts = $orderItem->quantity()->__toInt() / 5;
 				$freeOrderItem = new OrderItem(
-					$orderItem->product(),
-					$howManyFreeProducts,
-					0.0,
-					0.0
+					product: $orderItem->product(),
+					quantity: $howManyFreeProducts,
+					unitPrice: 0.0,
+					total: 0.0
 				);
 				$freeOrderItem->addAppliedDiscount(self::DISCOUNT_NAME);
 				$freeProductsOrderItems[] = $freeOrderItem;
