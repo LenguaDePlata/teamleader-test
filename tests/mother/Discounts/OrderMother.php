@@ -86,4 +86,16 @@ final class OrderMother
 			total: 1000.00
 		);
 	}
+
+	public static function aValidOrderWithOneToolItemAndNoDiscounts(): Order
+	{
+		return new Order(
+			id: 6,
+			customerId: 6,
+			orderItems: [
+				OrderItemMother::aOneToolProductItem(),
+			],
+			total: 49.50
+		);
+	}
 }
