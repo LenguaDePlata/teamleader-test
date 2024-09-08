@@ -1,12 +1,12 @@
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-      xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+<doctrine-mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                        https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="App\Discounts\Domain\Model\Product\Product" table="products">
     	<id name="_id" type="integer" column="_id">
     		<generator strategy="AUTO" />
     	</id>
-    	<embedded name="id" class="App\Discounts\Domain\ValueObject\Product\ProductId"/>
+    	<embedded name="id" class="App\Discounts\Domain\ValueObject\Product\ProductId"  use-column-prefix="false"/>
     	<embedded name="description" class="App\Discounts\Domain\ValueObject\Product\Description" use-column-prefix="false"/>
     	<embedded name="category" class="App\Discounts\Domain\ValueObject\Product\Category" use-column-prefix="false"/>
     	<embedded name="price" class="App\Discounts\Domain\ValueObject\Product\Price" use-column-prefix="false"/>
