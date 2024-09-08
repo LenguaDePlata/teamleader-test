@@ -10,11 +10,26 @@ final class OrderItemMother
 {
 	public static function aTenSwitchProductItem(): OrderItem
 	{
+		return self::anOrderItemWithThisManySwitchProducts(10);
+	}
+
+	public static function aFourSwitchProductItem(): OrderItem
+	{
+		return self::anOrderItemWithThisManySwitchProducts(4);
+	}
+
+	public static function aOneSwitchProductItem(): OrderItem
+	{
+		return self::anOrderItemWithThisManySwitchProducts(1);
+	}
+
+	private static function anOrderItemWithThisManySwitchProducts(int $quantity): OrderItem
+	{
 		return new OrderItem(
 			product: ProductMother::aSwitchProduct(),
-			quantity: 10,
+			quantity: $quantity,
 			unitPrice: 4.99,
-			total: 49.90
+			total: round(4.99 * (float)$quantity, 2)
 		);
 	}
 

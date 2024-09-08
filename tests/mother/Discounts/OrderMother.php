@@ -61,4 +61,17 @@ final class OrderMother
 			total: 69.00
 		);
 	}
+
+	public static function aValidOrderWithMultipleLessThanFiveSwitchItems(): Order
+	{
+		return new Order(
+			id: 5,
+			customerId: 5,
+			orderItems: [
+				OrderItemMother::aFourSwitchProductItem(),
+				OrderItemMother::aOneSwitchProductItem(),
+			],
+			total: 24.95
+		);
+	}
 }
