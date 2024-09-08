@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Discounts\Infrastructure\Specification\DiscountCheck;
 
-use App\Discounts\Domain\Model\Order\Order;
 use App\Discounts\Infrastructure\Specification\DiscountCheck\FiveProductsOfCategorySwitches;
 use App\Tests\Mother\Discounts\OrderMother;
 use PHPUnit\Framework\TestCase;

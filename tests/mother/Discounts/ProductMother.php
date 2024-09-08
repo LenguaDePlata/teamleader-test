@@ -37,4 +37,14 @@ final class ProductMother
 			price: 49.50
 		);
 	}
+
+	public static function a1000PriceProduct(): Product
+	{
+		return new Product(
+			id: "X101",
+			description: "Nuclear screwdriver",
+			category: 1,
+			price: 1000.00
+		);
+	}
 }

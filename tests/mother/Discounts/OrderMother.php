@@ -74,4 +74,16 @@ final class OrderMother
 			total: 24.95
 		);
 	}
+
+	public static function aValidOrderWithTotalExactly1000AndNoDiscounts(): Order
+	{
+		return new Order(
+			id: 4,
+			customerId: 4,
+			orderItems: [
+				OrderItemMother::a1000PriceProductItem()
+			],
+			total: 1000.00
+		);
+	}
 }
