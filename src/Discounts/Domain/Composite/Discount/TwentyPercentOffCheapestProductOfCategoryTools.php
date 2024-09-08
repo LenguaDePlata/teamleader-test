@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Discounts\Domain\Composite\Discount;
 
 use App\Discounts\Domain\Enum\Product\ProductCategory;
+use App\Discounts\Domain\Exception\AssignedDiscountThatCouldNotBeAppliedException;
 use App\Discounts\Domain\Model\Order\Order;
 use App\Discounts\Domain\Model\Order\OrderItem;
 
@@ -30,6 +31,10 @@ class TwentyPercentOffCheapestProductOfCategoryTools implements Discount
 				$cheapestOrderItemKey = $key;
 				$cheapestOrderItem = $orderItem;
 			}
+		}
+
+		if ($cheapestOrderItem === null) {
+			throw new AssignedDiscountThatCouldNotBeAppliedException(self::class);
 		}
 
 		$cheapestTotal = $cheapestOrderItem->total()->__toFloat();

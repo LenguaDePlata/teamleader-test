@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Discounts\Domain\Composite\Discount;
 
 use App\Discounts\Domain\Composite\Discount\TwentyPercentOffCheapestProductOfCategoryTools;
 use App\Discounts\Domain\Enum\Product\ProductCategory;
+use App\Discounts\Domain\Exception\AssignedDiscountThatCouldNotBeAppliedException;
 use App\Discounts\Domain\Model\Order\Order;
 use App\Discounts\Domain\Model\Order\OrderItem;
 use App\Tests\Mother\Discounts\OrderMother;
@@ -47,9 +48,14 @@ final class TwentyPercentOffCheapestProductOfCategoryToolsTest extends TestCase
 		);
 	}
 
-	public function testItAppliesNothingToOrderIfThereAreNoTools()
+	public function testItThrowsExceptionIfThereAreNoTools()
 	{
+		// Arrange
+		$order = OrderMother::aValidOrderWithOneItemAndNoDiscounts();
+		$this->expectException(AssignedDiscountThatCouldNotBeAppliedException::class);
 
+		// Act
+		$this->discount->apply($order);
 	}
 
 	private function thenOrderContainsTheCheapestToolItemWithThisDiscount(Order $order, OrderItem $cheapestItem): bool

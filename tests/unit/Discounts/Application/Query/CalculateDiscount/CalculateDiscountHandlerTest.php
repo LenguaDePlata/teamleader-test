@@ -12,6 +12,7 @@ use App\Discounts\Application\Query\CalculateDiscount\CalculateDiscountResponse;
 use App\Discounts\Application\Assembler\CalculateDiscountResponseAssembler;
 use App\Discounts\Domain\Builder\OrderBuilder;
 use App\Discounts\Domain\Exception\ProductNotFoundException;
+use App\Discounts\Domain\Exception\AssignedDiscountThatCouldNotBeAppliedException;
 use App\Discounts\Domain\Exception\UndefinedDiscountCheckException;
 use App\Discounts\Domain\Model\Order\Order;
 use App\Discounts\Infrastructure\Specification\DiscountCheck\FiveProductsOfCategorySwitches;
@@ -97,6 +98,22 @@ final class CalculateDiscountHandlerTest extends TestCase
 		$this->handler->handle($query);
 	}
 
+	public function testItThrowsApplicationExceptionIfDiscountCouldNotBeApplied(): void
+	{
+		// Arrange
+		$query = CalculateDiscountQueryMother::aValidQueryWithOneItem();
+		$order = $this->createMock(Order::class);
+		
+		$this->givenTheBuilderCreatesThisOrder($order);
+		$this->givenTheOrderThrowsDiscountCouldNotBeAppliedException($order);
+		$this->givenTheResponseNeverGetsBuilt();
+
+		$this->expectException(UnexpectedDiscountErrorException::class);
+
+		// Act
+		$this->handler->handle($query);
+	}
+
 	private function givenTheBuilderCreatesThisOrder(Order $order): void
 	{
 		$this->orderBuilderMock
@@ -140,5 +157,13 @@ final class CalculateDiscountHandlerTest extends TestCase
 			->willThrowException(
 				new ProductNotFoundException(ProductIdMother::aWeirdId())
 			);
+	}
+
+	private function givenTheOrderThrowsDiscountCouldNotBeAppliedException(Order $order): void
+	{
+		$order
+			->expects($this->once())
+			->method('applyDiscounts')
+			->willThrowException(new AssignedDiscountThatCouldNotBeAppliedException('Discount1'));
 	}
 }

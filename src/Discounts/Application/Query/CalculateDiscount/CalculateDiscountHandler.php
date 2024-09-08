@@ -9,6 +9,7 @@ use App\Discounts\Application\Exception\UnexpectedDiscountErrorException;
 use App\Discounts\Application\Exception\ProductNotFoundException as ProductNotFoundApplicationException;
 use App\Discounts\Domain\Builder\OrderBuilder;
 use App\Discounts\Domain\Exception\UndefinedDiscountCheckException;
+use App\Discounts\Domain\Exception\AssignedDiscountThatCouldNotBeAppliedException;
 use App\Discounts\Domain\Exception\ProductNotFoundException;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
@@ -40,7 +41,7 @@ class CalculateDiscountHandler
 			$order->applyDiscounts(...$this->discountChecks);
 			
 			return $this->calculateDiscountResponseAssembler->toDTO($order, $query);
-		} catch (UndefinedDiscountCheckException $e) {
+		} catch (AssignedDiscountThatCouldNotBeAppliedException|UndefinedDiscountCheckException $e) {
 			throw new UnexpectedDiscountErrorException($e);
 		} catch (ProductNotFoundException $e) {
 			throw new ProductNotFoundApplicationException($e);
