@@ -41,4 +41,14 @@ final class OrderItemMother
 			total: 49.50
 		);
 	}
+
+	public static function aThousandSwitchProductItem(): OrderItem
+	{
+		return new OrderItem(
+			product: ProductMother::aSwitchProduct(),
+			quantity: 1000,
+			unitPrice: 4.99,
+			total: 4990.00
+		);
+	}
 }

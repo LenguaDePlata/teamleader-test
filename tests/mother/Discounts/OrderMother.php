@@ -36,4 +36,16 @@ final class OrderMother
 		$order->addAppliedDiscount('discount-3');
 		return $order;
 	}
+
+	public static function aValidOrderWithTotalOver1000AndNoDiscounts(): Order
+	{
+		return new Order(
+			id: 4,
+			customerId: 4,
+			orderItems: [
+				OrderItemMother::aThousandSwitchProductItem()
+			],
+			total: 4990.00
+		);
+	}
 }
