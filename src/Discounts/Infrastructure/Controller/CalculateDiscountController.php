@@ -31,20 +31,20 @@ final class CalculateDiscountController extends AbstractController
 			$decodedRequest = json_decode($request->getContent(), true);
 			$this->ensureRequestIsValid($decodedRequest, $this->constraints());
 			$response = $this->calculateDiscountHandler->handle(new CalculateDiscountQuery(
-				$decodedRequest['id'],
-				$decodedRequest['customer-id'],
+				(int)$decodedRequest['id'],
+				(int)$decodedRequest['customer-id'],
 				array_map(
 					function(array $item) {
 						return new OrderItemDTO(
 							$item['product-id'],
-							$item['quantity'],
-							$item['unit-price'],
-							$item['total']
+							(int)$item['quantity'],
+							(float)$item['unit-price'],
+							(float)$item['total']
 						);
 					},
 					$decodedRequest['items']
 				),
-				$decodedRequest['total']
+				(float)$decodedRequest['total']
 			));
 			return $this->json(
 				$response->__toArray(),
@@ -88,26 +88,31 @@ final class CalculateDiscountController extends AbstractController
 			]),
 			'items' => new Assert\Required([
 				new Assert\NotBlank(),
-				new Assert\Type('array')
-			]),
-			'items.*.product-id' => new Assert\Required([
-				new Assert\NotBlank(),
-				new Assert\Type('string')
-			]),
-			'items.*.quantity' => new Assert\Required([
-				new Assert\NotBlank(),
-				new Assert\Type('numeric'),
-				new Assert\Positive()
-			]),
-			'items.*.unit-price' => new Assert\Required([
-				new Assert\NotBlank(),
-				new Assert\Type('numeric'),
-				new Assert\PositiveOrZero()
-			]),
-			'items.*.total' => new Assert\Required([
-				new Assert\NotBlank(),
-				new Assert\Type('numeric'),
-				new Assert\PositiveOrZero()
+				new Assert\Type('array'),
+				new Assert\Count(['min' => 1]),
+        		new Assert\All([
+        			new Assert\Collection([
+        				'product-id' => new Assert\Required([
+        					new Assert\NotBlank(),
+        					new Assert\Type('string')
+        				]),
+        				'quantity' => new Assert\Required([
+        					new Assert\NotBlank(),
+        					new Assert\Type('numeric'),
+        					new Assert\Positive()
+        				]),
+        				'unit-price' => new Assert\Required([
+        					new Assert\NotBlank(),
+        					new Assert\Type('numeric'),
+        					new Assert\PositiveOrZero()
+        				]),
+        				'total' => new Assert\Required([
+        					new Assert\NotBlank(),
+        					new Assert\Type('numeric'),
+        					new Assert\PositiveOrZero()
+        				])
+        			]),
+        		])
 			]),
 			'total' => new Assert\Required([
 				new Assert\NotBlank(),

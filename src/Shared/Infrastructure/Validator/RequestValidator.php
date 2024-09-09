@@ -7,6 +7,7 @@ namespace App\Shared\Infrastructure\Validator;
 use App\Shared\Infrastructure\Exception\InvalidJsonException;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 trait RequestValidator
@@ -21,8 +22,8 @@ trait RequestValidator
         $validator = Validation::createValidator();
         $constraintCollection = new Collection($constraints);
         $this->violations = $validator->validate($input, $constraintCollection);
-        if ($violations->count() > 0) {
-            throw new InvalidArgumentException('Invalid arguments: '. (string)$violations);
+        if ($this->violations->count() > 0) {
+            throw new InvalidArgumentException('Invalid arguments: '. (string)$this->violations);
         }
     }
 

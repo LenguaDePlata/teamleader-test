@@ -6,7 +6,7 @@
     	<id name="_id" type="integer" column="_id">
     		<generator strategy="AUTO" />
     	</id>
-    	<embedded name="id" class="App\Discounts\Domain\ValueObject\Product\ProductId"  use-column-prefix="false"/>
+    	<embedded name="id" class="App\Discounts\Domain\ValueObject\Product\ProductId" use-column-prefix="false"/>
     	<embedded name="description" class="App\Discounts\Domain\ValueObject\Product\Description" use-column-prefix="false"/>
     	<embedded name="category" class="App\Discounts\Domain\ValueObject\Product\Category" use-column-prefix="false"/>
     	<embedded name="price" class="App\Discounts\Domain\ValueObject\Product\Price" use-column-prefix="false"/>
