@@ -14,7 +14,7 @@ class DoctrineProductRepository extends AbstractRepository implements ProductRep
 	public function findById(ProductId $id): ?Product
 	{
 		return $this->repository->findOneBy([
-			'productId.value' => (string)$id
+			'id.value' => (string)$id
 		]);
 	}
 
